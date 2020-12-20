@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Java后台服务监控首页</title>
+<link rel="stylesheet" type="text/css" href="../css/index.css">
+<link rel="stylesheet" type="text/css" href="../css/multiple-select.min.css">
+<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../js/multiple-select.min.js"></script>
+<script type="text/javascript" src="../My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../echart/echarts-all.js"></script>
+<script type="text/javascript" src="../js/index.js"></script>
+</head>
+<body>
+	<div class="condition">
+		<div class="serverlist">
+			服务器：
+			<select id="serverlistSelect" multiple style="width:150px;">
+			</select>
+			<input id="serverIp" style="display:none;"/>
+		</div>
+		<div class="daterange">
+			开始时间：<input type="text" required="required" class="Wdate form-controls" onClick="WdatePicker({maxDate:'#F{$dp.$D(\'endDate\')}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="startDate">
+			结束时间：<input type="text" required="required" class="Wdate form-controls" onClick="WdatePicker({minDate:'#F{$dp.$D(\'startDate\')}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="endDate">
+		</div>
+		<div class="search">
+			<button onclick="initChart()">刷新</button>
+			<button id="flushButton" onclick="autoFlush()">自动刷新</button>
+		</div>
+	</div>
+	<div class="container">
+		<div class="config"></div>
+		<div class="diagram">
+			<div id="thread" class="thread"></div>
+			<div id="request" class="request"></div>
+			<div id="memory" class="memory"></div>
+		</div>
+	</div>
+</body>
+</html>
