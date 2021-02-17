@@ -1,4 +1,4 @@
-var requestUrl="http://localhost:8081/performance";
+var requestUrl="http://localhost:8080/performance";
 var maxDataSize=3600 * 2;
 var requestChart;
 var threadChart;

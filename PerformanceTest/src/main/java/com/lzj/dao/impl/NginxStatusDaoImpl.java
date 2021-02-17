@@ -71,7 +71,7 @@ public class NginxStatusDaoImpl implements NginxStatusDao {
 			}
 		}
 		sql.append(dateFormat).append(" as MT,");
-		sql.append("sum(ActiveConnections),sum(AcceptConnections),sum(HandledConnections),sum(HandledRequests),sum(Reading),sum(Writing),sum(Waiting),sum(IncAcceptConnections),sum(IncHandledConnections),sum(IncHandledRequests) ");
+		sql.append("sum(ActiveConnections),sum(AcceptConnections),sum(HandledConnections),sum(HandledRequests),sum(Reading),sum(Writing),sum(Waiting),sum(IncAcceptConnections),sum(IncHandledConnections),sum(IncHandledRequests),max(MonitorTime) ");
 		sql.append(" from tb_nginx_status where 1=1");
 		if (!StringUtils.isEmpty(startDate)) {
 			sql.append(" and MonitorTime>='").append(startDate).append("'");
@@ -80,7 +80,7 @@ public class NginxStatusDaoImpl implements NginxStatusDao {
 			sql.append(" and MonitorTime<='").append(endDate).append("'");
 		}
 		if (!StringUtils.isEmpty(serverIp)) {
-			sql.append(" and IP ='").append(serverIp).append("'");
+			sql.append(" and IP =").append(serverIp);
 		}
 		sql.append(" group by MT order by MonitorTime asc ");
 		List<Long> activeConnections = new ArrayList<Long>();
@@ -94,6 +94,7 @@ public class NginxStatusDaoImpl implements NginxStatusDao {
 		List<Long> incHandledConnections = new ArrayList<Long>();
 		List<Long> incHandledRequests = new ArrayList<Long>();
 		List<String> monitorTime = new ArrayList<String>();
+		List<String> maxMonitorTimes = new ArrayList<String>();
 		jdbcTemplate.query(sql.toString(), new RowMapper<Object>() {
 			@Override
 			public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -108,6 +109,7 @@ public class NginxStatusDaoImpl implements NginxStatusDao {
 				incAcceptConnections.add(Long.valueOf(rs.getObject(9).toString()));
 				incHandledConnections.add(Long.valueOf(rs.getObject(10).toString()));
 				incHandledRequests.add(Long.valueOf(rs.getObject(11).toString()));
+				maxMonitorTimes.add(rs.getObject(12).toString());
 				return null;
 			}
 
@@ -124,6 +126,7 @@ public class NginxStatusDaoImpl implements NginxStatusDao {
 		returnMap.put("IncAcceptConnections", incAcceptConnections);
 		returnMap.put("IncHandledConnections", incHandledConnections);
 		returnMap.put("IncHandledRequests", incHandledRequests);
+		returnMap.put("MaxMonitorTimes", maxMonitorTimes);
 		return returnMap;
 	}
 }
